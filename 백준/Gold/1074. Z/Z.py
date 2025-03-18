@@ -1,26 +1,23 @@
+import sys
 N, r, c = map(int, input().split())
-def z(N,r,c,q) :
-    if N == 0 :
-        return(q)
-    
-    half = 2**(N-1)
+n = 2**N
+def z(n, x, y, b) :
+    if n == 0:
+        return(b)
+    n = n//2
+    if x<n and y<n :
+        q = 1
+    if x<n and y>=n :
+        q = 2
+        y -= n
+    if x>=n and y<n :
+        q = 3
+        x -= n
+    if x>=n and y>=n :
+        q = 4
+        x -= n
+        y -= n
+    b += (n**2) * (q-1)
+    return z(n, x, y, b)
 
-    if r < half :
-        if c < half :
-            quad = 1
-        else : 
-            quad = 2
-            c -= half
-    else :
-        if c<half :
-            quad = 3
-            r -= half
-        else :
-            quad = 4
-            r -= half
-            c -= half
-    q += (quad-1) * (half**2)
-    return(z(N-1,r,c,q))
-
-
-print(z(N,r,c,0))
+print(z(n,r,c,0))
