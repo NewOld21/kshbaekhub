@@ -7,10 +7,7 @@ pr = max(tree)
 
 while pl<= pr :
     pc = (pl + pr) // 2
-    cut = 0
-    for i in range(N) :
-        if tree[i] - pc > 0 :
-            cut += tree[i] - pc
+    cut = sum(t - pc for t in tree if t > pc)
     if M<=cut :
         pl = pc + 1
     else :
