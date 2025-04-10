@@ -8,14 +8,13 @@ dp = [[0]*(M) for _ in range(N)]
 dp[0][0] = 1
 for i in range(N) :
     for j in range(M) :
-        s = m[i][j]
-        if dp[i][j] == 0 or s==0 :
-            continue
-        else :
-            if i+s<N :
-                dp[i+s][j] +=  dp[i][j]
-            if j+s<M :
-                dp[i][j+s] +=  dp[i][j]
+        if dp[i][j]!=0 :
+            s = m[i][j]
+            if s != 0 :
+                if i+s<N :
+                    dp[i+s][j] +=  dp[i][j]
+                if j+s<M :
+                    dp[i][j+s] +=  dp[i][j]
                     
 
-print(dp[-1][-1])
+print(dp[N-1][M-1])
