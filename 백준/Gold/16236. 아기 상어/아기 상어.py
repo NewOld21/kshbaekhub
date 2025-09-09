@@ -19,21 +19,20 @@ for i in range(N) :
     for j in range(N) :
         if sea[i][j] == 9 :
             shark[0], shark[1] = i,j
-        else :
-            fish[sea[i][j]].append([i,j])
+
 
 def bfs(x,y) :
     global shark
     check = [[0 for _ in range(N)] for _ in range(N)] 
     q = []
-    heapq.heappush(q, [0,shark[0], shark[1]])
+    heapq.heappush(q, [0,x, y])
     check[shark[0]][shark[1]] = 1
 
     while q : 
         c,a,b = heapq.heappop(q)
 
-        if a == x and b == y :
-            return c
+        if 0 < sea[a][b] < shark[2] :
+            return [c,a,b]
         
         for i in range(4) :
             nx = a + dx[i]
@@ -42,46 +41,22 @@ def bfs(x,y) :
                 check[nx][ny] = 1
                 heapq.heappush(q,[c+1,nx,ny])
 
-    return -1
+    return [-1]
 
 ans = 0
 
 while True :
-    size = shark[2] - 1
-    mn_x, mn_y = 21, 21
-    mn = sys.maxsize
-    if size > 6 :
-        size = 6
-    for i in range(1,size+1) :
-        for x,y in fish[i] :
-            if sea[x][y] == -1 :
-                continue
-            cnt = bfs(x,y)
-            if cnt == -1 :
-                continue
-            if mn > cnt :
-                mn = cnt
-                mn_x, mn_y = x, y
-            elif mn == cnt :
-                if mn_x > x :
-                    mn_x = x
-                    mn_y = y
-                elif mn_x == x :
-                    if mn_y > y :
-                        mn_y = y
-    
-    if mn_x != 21 and mn_y != 21 :
-        ans += mn
-        sea[shark[0]][shark[1]] = -1
-        shark[0], shark[1] = mn_x, mn_y
-        sea[mn_x][mn_y] = -1
-        if shark[3] - 1 == 0 :
-            shark[2] += 1
-            shark[3] = shark[2]
-        else :
-            shark[3] -= 1
-    else :
+    cnt = bfs(shark[0],shark[1])
+    if cnt[0] == -1 :
         break
-
+    ans += cnt[0]
+    sea[shark[0]][shark[1]] = -1
+    shark[0], shark[1] = cnt[1], cnt[2]
+    sea[cnt[1]][cnt[2]] = -1
+    if shark[3] - 1 == 0 :
+        shark[2] += 1
+        shark[3] = shark[2]
+    else :
+        shark[3] -= 1
 
 print(ans)
