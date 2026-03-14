@@ -1,46 +1,47 @@
-import sys
-from collections import deque
+def union(x, y):
+    population = 0
+    unions = []
+    queue = [(x, y)]
+    while queue:
+        i, j = queue.pop(0)
+        unions.append((i, j))
+        population += A[i][j]
+        for di, dj in direction:
+            ni, nj = i + di, j + dj
+            if 0 <= ni < N and 0 <= nj < N and not visited[ni][nj] and L <= abs(A[i][j] - A[ni][nj]) <= R:
+                visited[ni][nj] = 1
+                queue.append((ni, nj))
 
-N, L, R = map(int, sys.stdin.readline().split())
+    # [A-1] 국경이 열린다면 인구 이동 실시
+    cnt = len(unions)
+    if cnt > 1:
+        new_population = population // cnt
+        for i, j in unions:
+            A[i][j] = new_population
+        return True
+    return False
 
-coun = []
+# [0] 입력값 할당
+N, L, R = map(int, input().split())
+A = []
+for _ in range(N):
+    A.append(list(map(int, input().split())))
 
-for _ in range(N) :
-    c = list(map(int, sys.stdin.readline().split()))
-    coun.append(c)
+# [1] 인구 이동이 일어나지 않을 때까지 반복
+direction = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+answer = 0
+while True:
+    visited = [[0] * N for _ in range(N)]
+    union_flag = False
+    for i in range(N):
+        for j in range(N):
+            if not visited[i][j]:
+                visited[i][j] = 1
+                if union(i, j):
+                    union_flag = True
 
-dx = [0,0,1,-1]
-dy = [1,-1,0,0]
+    if not union_flag:
+        break
+    answer += 1
 
-pos = True
-ans = -1
-while pos :
-    check = [[0 for _ in range(N)] for _ in range(N)]
-    ans += 1
-    pos = False
-    for i in range(N) :
-        for j in range(N) :
-            if check[i][j] == 0 :
-                q = [[i,j]]
-                set_q = [[i,j]]
-                check[i][j] = 1
-                cnt = coun[i][j]
-                while q :
-                    x,y = q.pop()
-                    for r in range(4) :
-                        nx = x + dx[r]
-                        ny = y + dy[r]
-                        
-                        if 0<= nx <N and 0<= ny < N and check[nx][ny] == 0 :
-                            if L <= abs(coun[x][y] - coun[nx][ny]) <= R :
-                                check[nx][ny] = 1
-                                cnt += coun[nx][ny]
-                                q.append([nx,ny])
-                                set_q.append([nx,ny])
-
-                if len(set_q) > 1 :
-                    for x,y in set_q :
-                        coun[x][y] = cnt//len(set_q)
-                    pos = True
-
-print(ans)
+print(answer)
