@@ -3,7 +3,7 @@ import java.util.*;
 class Solution {
     public int solution(int N, int[][] road, int K) {
         int answer = 0;
-        PriorityQueue<Integer> deque = new PriorityQueue<>();
+        Deque<Integer> deque = new ArrayDeque<>();
         
         deque.offer(1);
         
@@ -43,3 +43,4 @@ class Solution {
         return answer;
     }
 }
+
